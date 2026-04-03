@@ -9,8 +9,8 @@ exec qemu-system-x86_64 \
     -nographic \
     -serial mon:stdio \
     -monitor /dev/null \
-    -net nic,model=rtl8139 \
+    -net nic,model=virtio \
     -net user,hostfwd=tcp::8080-:8000 \
     -machine pc \
-    -append "console=ttyS0,115200 kaslr kpti=1 quiet panic=1 earlyprintk=serial" \
+    -append "console=ttyS0,115200 nokaslr kpti=1 quiet panic=1 earlyprintk=serial" \
     -s
