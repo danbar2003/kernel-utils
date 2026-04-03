@@ -63,6 +63,7 @@ for f in "$SCRIPT_DIR"/*; do
     basename="$(basename "$f")"
     [ "$basename" = "$(basename "$0")" ] && continue
     [ "$basename" = "$OUTPUT" ] && continue
+    [[ "$basename" =~ \.gz$ ]] && continue
     cp "$f" "$WORKDIR/initramfs/exploit/"
     echo "    Added: $basename"
 done
