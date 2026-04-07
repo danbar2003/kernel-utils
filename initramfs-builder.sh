@@ -8,6 +8,7 @@ BUSYBOX_URL="https://busybox.net/downloads/binaries/1.35.0-x86_64-linux-musl/bus
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 WORKDIR=$(mktemp -d)
 
+echo "[*] Working directory: $WORKDIR"
 echo "[*] Building initramfs for $ARCH..."
 
 mkdir -p "$WORKDIR/initramfs"/{bin,sbin,usr/bin,usr/sbin,etc,dev,proc,sys,tmp,root}
@@ -17,13 +18,13 @@ echo "[*] Downloading busybox binary..."
 if command -v busybox &>/dev/null; then
     cp "$(command -v busybox)" "$WORKDIR/initramfs/bin/busybox"
 elif [ "$ARCH" = "x86_64" ]; then
-    curl -fsSL "$BUSYBOX_URL" -o "$WORKDIR/initramfs/bin/busybox" || {
+    if curl -fsSL "$BUSYBOX_URL" -o "$WORKDIR/initramfs/bin/busybox"; then
+        :
+    else
         echo "[!] Download failed, trying apt..."
         apt-get install -y busybox-static 2>/dev/null || true
-        cp "$(command -v busybox)" "$WORKDIR/initramfs/bin/busybox" 2>/dev/null || {
-            echo "[!] Falling back to creating busybox wrapper..."
-        }
-    }
+        cp "$(command -v busybox)" "$WORKDIR/initramfs/bin/busybox" 2>/dev/null || true
+    fi
 fi
 
 if [ ! -f "$WORKDIR/initramfs/bin/busybox" ]; then
@@ -37,15 +38,14 @@ SHELL
 else
     chmod +x "$WORKDIR/initramfs/bin/busybox"
     echo "[*] Symlinking busybox applets..."
-    for applet in $("$WORKDIR/initramfs/bin/busybox" --list 2>/dev/null || echo "sh ls ps cat echo mkdir rm"); do
-        [ -e "$WORKDIR/initramfs/bin/$applet" ] && continue
-        ln -sf busybox "$WORKDIR/initramfs/bin/$applet" 2>/dev/null || true
+    
+    for applet in sh ash cat chmod cp dd echo grep gzip hostname init ln ls mkdir mdev mknod mount ps pwd rm sed sh sleep switch_root sysctl tar umount uname yes free df top kill killall sleep date touch which id env cut awk sed tr head tail sort uniq wc strings printf test true false ip route nslookup wget curl ping; do
+        [ -L "$WORKDIR/initramfs/bin/$applet" ] || ln -sf busybox "$WORKDIR/initramfs/bin/$applet" 2>/dev/null || true
     done
-    ln -sf busybox "$WORKDIR/initramfs/bin/sh" 2>/dev/null || true
 fi
 
 for dir in /bin /sbin /usr/bin /usr/sbin; do
-    [ -L "$WORKDIR/initramfs$dir" ] || ln -sf ../..$(basename "$dir") "$WORKDIR/initramfs$dir" 2>/dev/null || true
+    [ -L "$WORKDIR/initramfs$dir" ] || ln -sf bin "$WORKDIR/initramfs$dir" 2>/dev/null || true
 done
 
 echo "[*] Creating device nodes..."
