@@ -3,7 +3,7 @@ exec qemu-system-x86_64 \
     -m 1G \
     -smp 4 \
     -cpu kvm64,+smep,+smap \
-    -kernel ./linux-6.12.54/arch/x86/boot/bzImage \
+    -kernel ./bzImage \
     -initrd initramfs.cpio.gz \
     -snapshot \
     -nographic \
