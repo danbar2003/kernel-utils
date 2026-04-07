@@ -1,0 +1,20 @@
+# DRM/i915
+sed -i 's/CONFIG_DRM_I915=y/CONFIG_DRM_I915=n/' .config
+sed -i 's/CONFIG_DRM_I915=m/CONFIG_DRM_I915=n/' .config
+sed -i 's/CONFIG_DRM=y/CONFIG_DRM=n/' .config
+# Wireless
+sed -i 's/CONFIG_MAC80211=y/CONFIG_MAC80211=n/' .config
+sed -i 's/CONFIG_CFG80211=y/CONFIG_CFG80211=n/' .config
+# Bluetooth
+sed -i 's/CONFIG_BLUETOOTH=y/CONFIG_BLUETOOTH=n/' .config
+# Sound
+sed -i 's/CONFIG_SOUND=y/CONFIG_SOUND=n/' .config
+sed -i 's/CONFIG_SOUND_CORE=y/CONFIG_SOUND_CORE=n/' .config
+# Netfilter (fixes the build error)
+sed -i 's/CONFIG_NETFILTER=y/CONFIG_NETFILTER=n/' .config
+sed -i 's/CONFIG_IP_NF_IPTABLES=y/CONFIG_IP_NF_IPTABLES=n/' .config
+sed -i 's/CONFIG_NF_TABLES=y/CONFIG_NF_TABLES=n/' .config
+# Ensure VirtIO for QEMU
+grep -q "CONFIG_VIRTIO=y" .config || echo "CONFIG_VIRTIO=y" >> .config
+grep -q "CONFIG_VIRTIO_BLK=y" .config || echo "CONFIG_VIRTIO_BLK=y" >> .config
+grep -q "CONFIG_VIRTIO_NET=y" .config || echo "CONFIG_VIRTIO_NET=y" >> .config
