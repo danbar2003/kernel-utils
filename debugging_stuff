@@ -1,0 +1,13 @@
+# Core debug symbols
+echo "CONFIG_DEBUG_INFO=y" >> .config
+echo "CONFIG_DEBUG_INFO_DWARF4=y" >> .config
+echo "CONFIG_DEBUG_INFO_COMPRESSED=y" >> .config
+# KGDB kernel debugger
+echo "CONFIG_KGDB=y" >> .config
+echo "CONFIG_KGDB_SERIAL_CONSOLE=y" >> .config
+echo "CONFIG_KGDB_KDB=y" >> .config
+# Better debugging
+echo "CONFIG_FRAME_POINTER=y" >> .config
+echo "CONFIG_KALLSYMS=y" >> .config
+echo "CONFIG_MAGIC_SYSRQ=y" >> .config
+echo "CONFIG_PRINTK=y" >> .config
