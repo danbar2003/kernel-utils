@@ -39,9 +39,14 @@ else
     chmod +x "$WORKDIR/initramfs/bin/busybox"
     echo "[*] Symlinking busybox applets..."
     
-    for applet in sh ash cat chmod cp dd echo grep gzip hostname init ln ls mkdir mdev mknod mount ps pwd rm sed sh sleep switch_root sysctl tar umount uname yes free df top kill killall sleep date touch which id env cut awk sed tr head tail sort uniq wc strings printf test true false ip route nslookup wget curl ping; do
+    for applet in sh ash cat chmod cp dd echo grep gzip hostname init ln ls mkdir mdev mknod mount ps pwd rm sed sh sleep switch_root sysctl tar umount uname yes free df top kill killall sleep date touch which id env cut awk sed tr head tail sort uniq wc strings printf test true false ip route nslookup wget curl ping su login chroot; do
         [ -L "$WORKDIR/initramfs/bin/$applet" ] || ln -sf busybox "$WORKDIR/initramfs/bin/$applet" 2>/dev/null || true
     done
+    
+    echo "[*] Creating passwd file..."
+    mkdir -p "$WORKDIR/initramfs/etc"
+    echo "root:x:0:0:root:/root:/bin/sh" > "$WORKDIR/initramfs/etc/passwd"
+    echo "user:x:1000:1000:user:/home:/bin/sh" >> "$WORKDIR/initramfs/etc/passwd"
 fi
 
 for dir in /bin /sbin /usr/bin /usr/sbin; do
@@ -87,7 +92,15 @@ echo "IP: 10.0.2.15/24"
 echo "Gateway: 10.0.2.2"
 echo "Mount: /dev/sda1 on /mnt"
 echo ""
-exec /bin/sh
+echo "Available commands: su, login, sh"
+echo "Run 'su - user' to login as user 1000"
+echo ""
+
+if [ -n "$USER_UID" ]; then
+    su - "#$USER_UID"
+else
+    exec /bin/sh
+fi
 INIT
 
 chmod +x "$WORKDIR/initramfs/init"
