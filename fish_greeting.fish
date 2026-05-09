@@ -17,9 +17,10 @@ function fish_greeting
     set_color yellow; echo "  build:"; set_color normal
     echo "    make -j(nproc) bzImage"
     echo
-    set_color yellow; echo "  then on the Mac host:"; set_color normal
-    echo "    cp linux/arch/x86/boot/bzImage ."
-    echo "    ./run.sh"
+    set_color yellow; echo "  run under QEMU (from kernel tree, or anywhere with bzImage):"; set_color normal
+    echo "    krun                        # auto-finds bzImage + initramfs.cpio.gz"
+    echo "    krun /path/to/bzImage       # explicit"
+    echo "    (Ctrl-A X to quit, gdb on host :1234, exploit on :8080)"
     echo
     set_color brblack; echo "  (run 'help_msg' to see this again)"; set_color normal
 end

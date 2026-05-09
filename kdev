@@ -11,4 +11,6 @@ docker build -t "$IMG" "$HERE"
 exec docker run --rm -it \
   -v "$HOST_DIR:/work" \
   -w /work \
+  -p 8080:8080 \
+  -p 1234:1234 \
   "$IMG"

@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       curl wget vim less file \
       fish \
       gcc-x86-64-linux-gnu binutils-x86-64-linux-gnu \
+      qemu-system-x86 \
  && rm -rf /var/lib/apt/lists/*
 
 ENV ARCH=x86_64
@@ -20,6 +21,9 @@ RUN chsh -s /usr/bin/fish root
 RUN mkdir -p /root/.config/fish/functions
 COPY fish_greeting.fish /root/.config/fish/functions/fish_greeting.fish
 COPY help_msg.fish      /root/.config/fish/functions/help_msg.fish
+
+COPY krun /usr/local/bin/krun
+RUN chmod +x /usr/local/bin/krun
 
 WORKDIR /work
 CMD ["/usr/bin/fish", "-l"]
