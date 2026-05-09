@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       libssl-dev libelf-dev libncurses-dev \
       cpio kmod rsync xz-utils \
       gcc make git ca-certificates \
-      curl wget vim less \
+      curl wget vim less file \
       fish \
       gcc-x86-64-linux-gnu binutils-x86-64-linux-gnu \
  && rm -rf /var/lib/apt/lists/*
