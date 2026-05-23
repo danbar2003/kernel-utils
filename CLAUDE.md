@@ -21,8 +21,13 @@ in `src/kernel_utils/cli.py` `os.execvp` into them via `sh`.
   bind-mounted. Backed by `data/kdev.sh` + `data/Dockerfile`.
 - **`krun [bzImage] [initramfs]`** — QEMU launcher with hardened CTF
   settings (SMEP/SMAP/KPTI, gdbstub on :1234, guest:8000 → host:8080).
-  Auto-discovers artifacts in `arch/x86/boot/`, `./`, `/work/`. Also
-  baked into the container image as `/usr/local/bin/krun`.
+  Auto-discovers artifacts in `arch/x86/boot/`, `./`, `/work/`,
+  `$KU_DATA/`, `/opt/kernel-utils/`. Also baked into the container image
+  as `/usr/local/bin/krun`. NIC model selectable via `KU_NIC` env var:
+  `e1000` (default, works with most defconfigs) or `virtio` (requires
+  `CONFIG_VIRTIO_NET=y` + `CONFIG_VIRTIO_PCI=y` in the guest kernel).
+  KASLR selectable via `KASLR` env var: `0` (default, appends `nokaslr`
+  to cmdline) or `1` (enables KASLR).
 - **`kbuild-initramfs`** — builds `initramfs.cpio.gz` in cwd. Copies
   files from cwd into `/exploit` inside the image.
 

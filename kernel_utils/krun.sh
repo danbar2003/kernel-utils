@@ -25,7 +25,20 @@ if [ -z "$INITRD" ]; then
 fi
 [ -z "$INITRD" ] && { echo "krun: no initramfs.cpio.gz found" >&2; exit 1; }
 
-echo "krun: bzImage=$BZ  initrd=$INITRD  (Ctrl-A X to quit, gdb on :1234)"
+NIC="${KU_NIC:-e1000}"
+case "$NIC" in
+  virtio) NIC=virtio-net-pci ;;
+  e1000|virtio-net-pci) ;;
+  *) echo "krun: unknown KU_NIC='$NIC' (use e1000 or virtio)" >&2; exit 1 ;;
+esac
+
+case "${KASLR:-0}" in
+  0|"") KASLR_ARG=nokaslr ;;
+  1)    KASLR_ARG=kaslr ;;
+  *) echo "krun: unknown KASLR='$KASLR' (use 0 or 1)" >&2; exit 1 ;;
+esac
+
+echo "krun: bzImage=$BZ  initrd=$INITRD  nic=$NIC  kaslr=${KASLR:-0}  (Ctrl-A X to quit, gdb on :1234)"
 
 exec qemu-system-x86_64 \
     -m 1G -smp 4 \
@@ -37,7 +50,7 @@ exec qemu-system-x86_64 \
     -serial mon:stdio \
     -monitor /dev/null \
     -netdev user,id=n0,hostfwd=tcp::8080-:8000 \
-    -device e1000,netdev=n0 \
+    -device "$NIC,netdev=n0" \
     -machine pc \
-    -append "console=ttyS0,115200 nokaslr kpti=1 quiet panic=1 earlyprintk=serial" \
+    -append "console=ttyS0,115200 $KASLR_ARG kpti=1 quiet panic=1 earlyprintk=serial" \
     -s

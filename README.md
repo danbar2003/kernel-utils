@@ -16,10 +16,21 @@ Installs three entry points on `$PATH`:
   CTF settings (SMEP/SMAP/KPTI, gdbstub on :1234, guest:8000 →
   host:8080). Auto-discovers `arch/x86/boot/bzImage`, `./bzImage`,
   `./initramfs.cpio.gz` in cwd.
-- `krun-host` — simpler QEMU launcher; expects `./bzImage` and
-  `./initramfs.cpio.gz` in cwd.
 - `kbuild-initramfs` — builds `initramfs.cpio.gz` in cwd; copies files
   from cwd into `/exploit` inside the image.
+
+### Environment variables
+
+- `KU_NIC` — NIC model used by `krun`. `e1000` (default) or `virtio`
+  (alias for `virtio-net-pci`). Pick `virtio` only if your kernel has
+  `CONFIG_VIRTIO_NET=y` and `CONFIG_VIRTIO_PCI=y`; otherwise `eth0`
+  won't appear in the guest.
+- `KASLR` — `0` (default) appends `nokaslr` to the kernel cmdline,
+  matching the CTF-friendly default. `1` enables KASLR.
+
+  ```sh
+  KU_NIC=virtio KASLR=1 krun
+  ```
 
 ## Typical flow
 
