@@ -95,8 +95,9 @@ echo ""
 echo "Available commands: su, login, sh"
 echo "Run 'su - user' to login as user 1000"
 echo ""
-echo "Pull files from the host's HTTP server (10.0.2.2 = QEMU host):"
-echo "  wget http://10.0.2.2:8000/file -O /tmp/file"
+echo "Pull and run the exploit (host must serve it on :8000):"
+echo "  pull                # wget 10.0.2.2:8000/exploit -> /tmp/exp +x"
+echo "  /tmp/exp"
 echo ""
 
 if [ -n "$USER_UID" ]; then
@@ -107,6 +108,19 @@ fi
 INIT
 
 chmod +x "$WORKDIR/initramfs/init"
+
+cat > "$WORKDIR/initramfs/bin/pull" << 'PULL'
+#!/bin/sh
+# pull the exploit from the host HTTP server and make it executable
+set -e
+URL="${1:-http://10.0.2.2:8000/exploit}"
+OUT="${2:-/tmp/exp}"
+rm -f "$OUT"
+wget "$URL" -O "$OUT"
+chmod +x "$OUT"
+echo "[+] $URL -> $OUT (+x)"
+PULL
+chmod +x "$WORKDIR/initramfs/bin/pull"
 
 echo "[*] Creating cpio archive..."
 cd "$WORKDIR/initramfs"
