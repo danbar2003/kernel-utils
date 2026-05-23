@@ -22,8 +22,13 @@ RUN mkdir -p /root/.config/fish/functions
 COPY fish_greeting.fish /root/.config/fish/functions/fish_greeting.fish
 COPY help_msg.fish      /root/.config/fish/functions/help_msg.fish
 
-COPY krun /usr/local/bin/krun
+COPY krun.sh /usr/local/bin/krun
 RUN chmod +x /usr/local/bin/krun
+
+COPY disable_random_defconfig_stuff /opt/kernel-utils/disable_random_defconfig_stuff
+COPY debugging_stuff                /opt/kernel-utils/debugging_stuff
+COPY initramfs.cpio.gz              /opt/kernel-utils/initramfs.cpio.gz
+ENV KU_CONFIGS=/opt/kernel-utils
 
 WORKDIR /work
 CMD ["/usr/bin/fish", "-l"]

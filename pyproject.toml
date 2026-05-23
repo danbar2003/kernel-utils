@@ -32,6 +32,7 @@ packages = ["kernel_utils"]
 "kernel_utils/help_msg.fish" = "kernel_utils/help_msg.fish"
 "kernel_utils/debugging_stuff" = "kernel_utils/debugging_stuff"
 "kernel_utils/disable_random_defconfig_stuff" = "kernel_utils/disable_random_defconfig_stuff"
+"kernel_utils/initramfs.cpio.gz" = "kernel_utils/initramfs.cpio.gz"
 
 [tool.hatch.build.targets.sdist]
 include = ["kernel_utils", "README.md", "CLAUDE.md"]

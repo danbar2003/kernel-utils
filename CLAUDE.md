@@ -38,11 +38,14 @@ Other bundled assets:
   speed.
 - **`fish_greeting.fish` / `help_msg.fish`** — colored cheat sheet on
   container entry; reprintable via `help_msg`.
-- **`disable_random_defconfig_stuff`** — config fragment stripping
-  irrelevant subsystems (DRM, wifi, BT, sound, netfilter) and enabling
-  VirtIO. Append to `.config` then `make olddefconfig`.
-- **`debugging_stuff`** — config fragment for debug symbols, KGDB,
-  KALLSYMS, frame pointers, SysRq.
+- **`disable_random_defconfig_stuff`** — shell script (sed+echo) that
+  strips irrelevant subsystems (DRM, wifi, BT, sound, netfilter) and
+  enables VirtIO. Run with `sh $KU_CONFIGS/disable_random_defconfig_stuff`
+  from inside the kernel tree, then `make olddefconfig`. NOT a kconfig
+  fragment — do not `cat >> .config`.
+- **`debugging_stuff`** — shell script appending debug-symbol/KGDB/
+  KALLSYMS/frame-pointer/SysRq configs to `./.config`. Same usage:
+  `sh $KU_CONFIGS/debugging_stuff`.
 
 Typical flow:
 

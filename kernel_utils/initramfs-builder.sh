@@ -95,6 +95,9 @@ echo ""
 echo "Available commands: su, login, sh"
 echo "Run 'su - user' to login as user 1000"
 echo ""
+echo "Pull files from the host's HTTP server (10.0.2.2 = QEMU host):"
+echo "  wget http://10.0.2.2:8000/file -O /tmp/file"
+echo ""
 
 if [ -n "$USER_UID" ]; then
     su - "#$USER_UID"

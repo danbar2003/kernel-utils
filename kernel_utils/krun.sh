@@ -19,7 +19,7 @@ fi
 
 INITRD="${2:-}"
 if [ -z "$INITRD" ]; then
-  for c in ./initramfs.cpio.gz /work/initramfs.cpio.gz; do
+  for c in ./initramfs.cpio.gz /work/initramfs.cpio.gz "$KU_DATA/initramfs.cpio.gz" /opt/kernel-utils/initramfs.cpio.gz; do
     [ -f "$c" ] && INITRD="$c" && break
   done
 fi
@@ -36,8 +36,8 @@ exec qemu-system-x86_64 \
     -nographic \
     -serial mon:stdio \
     -monitor /dev/null \
-    -net nic,model=virtio \
-    -net user,hostfwd=tcp::8080-:8000 \
+    -netdev user,id=n0,hostfwd=tcp::8080-:8000 \
+    -device virtio-net-pci,netdev=n0 \
     -machine pc \
     -append "console=ttyS0,115200 nokaslr kpti=1 quiet panic=1 earlyprintk=serial" \
     -s
