@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kernel-utils"
+version = "0.1.0"
+description = "Toolkit for hacking on Linux kernels (CTF / exploit-dev) from a Mac host"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Daniel Bartov", email = "daniel.bartov@gmail.com" }]
+
+[project.scripts]
+kdev = "kernel_utils.cli:kdev"
+krun = "kernel_utils.cli:krun"
+krun-host = "kernel_utils.cli:krun_host"
+kbuild-initramfs = "kernel_utils.cli:kbuild_initramfs"
+
+[project.urls]
+Homepage = "https://github.com/danbar2003/kernel-utils"
+
+[tool.hatch.build.targets.wheel]
+packages = ["kernel_utils"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"kernel_utils/Dockerfile" = "kernel_utils/Dockerfile"
+"kernel_utils/kdev.sh" = "kernel_utils/kdev.sh"
+"kernel_utils/krun.sh" = "kernel_utils/krun.sh"
+"kernel_utils/run.sh" = "kernel_utils/run.sh"
+"kernel_utils/initramfs-builder.sh" = "kernel_utils/initramfs-builder.sh"
+"kernel_utils/fish_greeting.fish" = "kernel_utils/fish_greeting.fish"
+"kernel_utils/help_msg.fish" = "kernel_utils/help_msg.fish"
+"kernel_utils/debugging_stuff" = "kernel_utils/debugging_stuff"
+"kernel_utils/disable_random_defconfig_stuff" = "kernel_utils/disable_random_defconfig_stuff"
+
+[tool.hatch.build.targets.sdist]
+include = ["kernel_utils", "README.md", "CLAUDE.md"]

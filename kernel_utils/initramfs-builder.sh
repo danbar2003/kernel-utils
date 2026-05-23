@@ -5,7 +5,7 @@ ARCH="${1:-x86_64}"
 OUTPUT="initramfs.cpio.gz"
 BUSYBOX_URL="https://busybox.net/downloads/binaries/1.35.0-x86_64-linux-musl/busybox"
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$PWD"
 WORKDIR=$(mktemp -d)
 
 echo "[*] Working directory: $WORKDIR"
