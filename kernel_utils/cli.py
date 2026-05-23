@@ -18,9 +18,5 @@ def krun() -> None:
     _exec("krun.sh")
 
 
-def krun_host() -> None:
-    _exec("run.sh")
-
-
 def kbuild_initramfs() -> None:
     _exec("initramfs-builder.sh")

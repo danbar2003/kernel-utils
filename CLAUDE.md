@@ -23,8 +23,6 @@ in `src/kernel_utils/cli.py` `os.execvp` into them via `sh`.
   settings (SMEP/SMAP/KPTI, gdbstub on :1234, guest:8000 → host:8080).
   Auto-discovers artifacts in `arch/x86/boot/`, `./`, `/work/`. Also
   baked into the container image as `/usr/local/bin/krun`.
-- **`krun-host`** — simpler QEMU launcher (`data/run.sh`); expects
-  `./bzImage` and `./initramfs.cpio.gz` in cwd.
 - **`kbuild-initramfs`** — builds `initramfs.cpio.gz` in cwd. Copies
   files from cwd into `/exploit` inside the image.
 

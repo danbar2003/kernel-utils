@@ -8,7 +8,7 @@ Toolkit for hacking on Linux kernels (CTF / exploit-dev) from a Mac host.
 pipx install .          # or: pip install -e .
 ```
 
-Installs four entry points on `$PATH`:
+Installs three entry points on `$PATH`:
 
 - `kdev [path]` — build + enter the kernel-build Docker container. Mounts
   `$PWD` (or `path`) at `/work`.

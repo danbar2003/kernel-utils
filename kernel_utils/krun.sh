@@ -37,7 +37,7 @@ exec qemu-system-x86_64 \
     -serial mon:stdio \
     -monitor /dev/null \
     -netdev user,id=n0,hostfwd=tcp::8080-:8000 \
-    -device virtio-net-pci,netdev=n0 \
+    -device e1000,netdev=n0 \
     -machine pc \
     -append "console=ttyS0,115200 nokaslr kpti=1 quiet panic=1 earlyprintk=serial" \
     -s

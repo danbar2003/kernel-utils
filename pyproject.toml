@@ -13,7 +13,6 @@ authors = [{ name = "Daniel Bartov", email = "daniel.bartov@gmail.com" }]
 [project.scripts]
 kdev = "kernel_utils.cli:kdev"
 krun = "kernel_utils.cli:krun"
-krun-host = "kernel_utils.cli:krun_host"
 kbuild-initramfs = "kernel_utils.cli:kbuild_initramfs"
 
 [project.urls]
@@ -26,7 +25,6 @@ packages = ["kernel_utils"]
 "kernel_utils/Dockerfile" = "kernel_utils/Dockerfile"
 "kernel_utils/kdev.sh" = "kernel_utils/kdev.sh"
 "kernel_utils/krun.sh" = "kernel_utils/krun.sh"
-"kernel_utils/run.sh" = "kernel_utils/run.sh"
 "kernel_utils/initramfs-builder.sh" = "kernel_utils/initramfs-builder.sh"
 "kernel_utils/fish_greeting.fish" = "kernel_utils/fish_greeting.fish"
 "kernel_utils/help_msg.fish" = "kernel_utils/help_msg.fish"
