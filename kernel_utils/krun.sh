@@ -38,7 +38,12 @@ case "${KASLR:-0}" in
   *) echo "krun: unknown KASLR='$KASLR' (use 0 or 1)" >&2; exit 1 ;;
 esac
 
-echo "krun: bzImage=$BZ  initrd=$INITRD  nic=$NIC  kaslr=${KASLR:-0}  (Ctrl-A X to quit, gdb on :1234)"
+# Host ports. Override these to run krun alongside a `kdev` container, which
+# already publishes 8080/1234 on the host (e.g. KU_HTTP_PORT=8081 KU_GDB_PORT=1235).
+HTTP_PORT="${KU_HTTP_PORT:-8080}"
+GDB_PORT="${KU_GDB_PORT:-1234}"
+
+echo "krun: bzImage=$BZ  initrd=$INITRD  nic=$NIC  kaslr=${KASLR:-0}  (Ctrl-A X to quit, gdb on :$GDB_PORT)"
 
 exec qemu-system-x86_64 \
     -m 1G -smp 4 \
@@ -49,8 +54,8 @@ exec qemu-system-x86_64 \
     -nographic \
     -serial mon:stdio \
     -monitor /dev/null \
-    -netdev user,id=n0,hostfwd=tcp::8080-:8000 \
+    -netdev user,id=n0,hostfwd=tcp::"$HTTP_PORT"-:8000 \
     -device "$NIC,netdev=n0" \
     -machine pc \
     -append "console=ttyS0,115200 $KASLR_ARG kpti=1 quiet panic=1 earlyprintk=serial" \
-    -s
+    -gdb tcp::"$GDB_PORT"
