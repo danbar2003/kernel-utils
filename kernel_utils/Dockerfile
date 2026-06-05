@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get upgrade -y \
  && apt-get install -y --no-install-recommends \
       build-essential bc bison flex \
-      libssl-dev libelf-dev libncurses-dev \
+      libssl-dev libelf-dev libncurses-dev libkeyutils-dev \
       cpio kmod rsync xz-utils \
       gcc make git ca-certificates \
       curl wget vim less file \
