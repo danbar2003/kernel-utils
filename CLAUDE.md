@@ -38,7 +38,25 @@ Other bundled assets:
   (`gcc-x86-64-linux-gnu`). `ARCH=x86_64` and
   `CROSS_COMPILE=x86_64-linux-gnu-` are baked in. Native arm64 +
   cross-toolchain was chosen over `--platform=linux/amd64` emulation for
-  speed.
+  speed. Includes `cmake`; `CMAKE_TOOLCHAIN_FILE` points at
+  `x86_64-cross.cmake` so bare `cmake -B build` cross-compiles to x86_64
+  (cmake left alone picks native arm64 g++ and emits arm64). Each
+  `apt-get install` runs its own `apt-get update` — a cached update layer
+  paired with a rebuilt install layer 404s once Debian rotates .deb
+  versions off the mirror.
+- **`x86_64-cross.cmake`** — cmake toolchain file (compilers +
+  multiarch BOTH find-root modes). Scoped to cmake only, so it does not
+  hijack the native gcc that kernel HOSTCC needs.
+- **kernelXDK (libxdk) is prebuilt into the image.** The Dockerfile clones
+  `google/kernel-research`, cross-compiles `libxdk` to an x86_64 static lib
+  via the cmake toolchain file, and installs it to the standard multiarch
+  paths (`/usr/include/xdk`, `/usr/lib/x86_64-linux-gnu/libkernelXDK.a`).
+  So a bare `x86_64-linux-gnu-g++ -static exploit.c -lkernelXDK -o exploit`
+  links with no `-I`/`-L` — no runtime clone or `./build.sh`. The kernelctf
+  target DB is cached at `$KU_XDK/db/kernelctf.kxdb` (`KU_XDK=/opt/kernelxdk`).
+  Only the `kernelXDK` library target is built (test binary skipped). Rebuild
+  the image (`kdev` rebuilds when the Dockerfile changes) to pick up a newer
+  upstream libxdk; the clone is depth-1 of the default branch, unpinned.
 - **`fish_greeting.fish` / `help_msg.fish`** — colored cheat sheet on
   container entry; reprintable via `help_msg`.
 - **`disable_random_defconfig_stuff`** — shell script (sed+echo) that

@@ -17,6 +17,13 @@ function fish_greeting
     set_color yellow; echo "  build:"; set_color normal
     echo "    make -j(nproc) bzImage"
     echo
+    set_color yellow; echo "  compile an x86_64 exploit (cc/gcc here are the arm64 host tools):"; set_color normal
+    echo "    x86_64-linux-gnu-gcc -static exploit.c -o exploit"
+    echo
+    set_color yellow; echo "  kernelXDK is prebuilt -- link with a bare -lkernelXDK (no -I/-L):"; set_color normal
+    echo "    x86_64-linux-gnu-g++ -static -std=gnu++17 *.c *.cpp -lkernelXDK -o exploit"
+    echo "    target DB cached at \$KU_XDK/db/kernelctf.kxdb"
+    echo
     set_color yellow; echo "  run under QEMU (from kernel tree, or anywhere with bzImage):"; set_color normal
     echo "    krun                        # auto-finds bzImage + initramfs.cpio.gz"
     echo "    krun /path/to/bzImage       # explicit"

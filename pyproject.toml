@@ -23,6 +23,7 @@ packages = ["kernel_utils"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "kernel_utils/Dockerfile" = "kernel_utils/Dockerfile"
+"kernel_utils/x86_64-cross.cmake" = "kernel_utils/x86_64-cross.cmake"
 "kernel_utils/kdev.sh" = "kernel_utils/kdev.sh"
 "kernel_utils/krun.sh" = "kernel_utils/krun.sh"
 "kernel_utils/initramfs-builder.sh" = "kernel_utils/initramfs-builder.sh"
