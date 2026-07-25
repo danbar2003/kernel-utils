@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+"""gen_kxdb — build a target_db.kxdb from a vmlinux file.
+Usage: gen_kxdb <vmlinux> [output.kxdb]
+"""
+import sys, subprocess, os
+sys.path.insert(0, "/opt/kernelxdk/kxdb_tool")
+import config
+from data_model.db import Db, Target
+from data_model.meta import MetaConfig
+from data_model.pivots import Pivots
+from converter.kxdb_file import write_kxdb
+
+KBASE = 0xffffffff81000000
+
+def get_version(vmlinux):
+    out = subprocess.run(["strings", vmlinux], capture_output=True, text=True).stdout
+    for line in out.splitlines():
+        if line.startswith("Linux version "): return line.strip()
+    return "Linux version unknown"
+
+def get_symbols(vmlinux):
+    out = subprocess.run(["nm", vmlinux], capture_output=True, text=True).stdout
+    syms = {}
+    for line in out.splitlines():
+        if not line or line[0] == " ": continue
+        parts = line.split()
+        if len(parts) >= 3:
+            try:
+                addr = int(parts[0], 16)
+                if addr >= KBASE:
+                    syms[parts[2]] = addr - KBASE
+            except ValueError: pass
+    return syms
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: gen_kxdb <vmlinux> [output.kxdb]", file=sys.stderr)
+        sys.exit(1)
+    vmlinux = sys.argv[1]
+    output = sys.argv[2] if len(sys.argv) > 2 else "target_db.kxdb"
+    if not os.path.exists(vmlinux):
+        print(f"gen_kxdb: {vmlinux}: not found", file=sys.stderr)
+        sys.exit(1)
+    print("[*] version ..."); version = get_version(vmlinux)
+    parts = version.split(); release = parts[2] if len(parts) > 2 else "unknown"
+    print(f"    {version}")
+    print("[*] symbols (nm) ..."); syms = get_symbols(vmlinux)
+    print(f"    {len(syms)} symbols extracted")
+    all_symbol_names = sorted(syms.keys())
+    meta = MetaConfig.from_desc(all_symbol_names, config.rop_actions, config.structs)
+    target = Target(distro="custom", release_name=release, version=version,
+                    symbols=syms, rop_actions=[], stack_pivots=Pivots(),
+                    structs={}, kernel_page_count=0)
+    write_kxdb(output, Db(meta, [target]))
+    print(f"[+] {output}")
+
+if __name__ == "__main__": main()

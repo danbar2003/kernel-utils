@@ -47,7 +47,7 @@ echo "krun: bzImage=$BZ  initrd=$INITRD  nic=$NIC  kaslr=${KASLR:-0}  (Ctrl-A X 
 
 exec qemu-system-x86_64 \
     -m 1G -smp 4 \
-    -cpu kvm64,+smep,+smap \
+    -cpu kvm64,+smep,+smap,+rdtscp \
     -kernel "$BZ" \
     -initrd "$INITRD" \
     -snapshot \

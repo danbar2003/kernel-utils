@@ -22,7 +22,8 @@ function fish_greeting
     echo
     set_color yellow; echo "  kernelXDK is prebuilt -- link with a bare -lkernelXDK (no -I/-L):"; set_color normal
     echo "    x86_64-linux-gnu-g++ -static -std=gnu++17 *.c *.cpp -lkernelXDK -o exploit"
-    echo "    target DB cached at \$KU_XDK/db/kernelctf.kxdb"
+    echo "    gen_kxdb vmlinux               # build target_db.kxdb from your vmlinux"
+    echo "    gen_kxdb vmlinux out.kxdb      # custom output path"
     echo
     set_color yellow; echo "  run under QEMU (from kernel tree, or anywhere with bzImage):"; set_color normal
     echo "    krun                        # auto-finds bzImage + initramfs.cpio.gz"

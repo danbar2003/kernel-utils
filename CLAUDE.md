@@ -52,11 +52,17 @@ Other bundled assets:
   via the cmake toolchain file, and installs it to the standard multiarch
   paths (`/usr/include/xdk`, `/usr/lib/x86_64-linux-gnu/libkernelXDK.a`).
   So a bare `x86_64-linux-gnu-g++ -static exploit.c -lkernelXDK -o exploit`
-  links with no `-I`/`-L` — no runtime clone or `./build.sh`. The kernelctf
-  target DB is cached at `$KU_XDK/db/kernelctf.kxdb` (`KU_XDK=/opt/kernelxdk`).
-  Only the `kernelXDK` library target is built (test binary skipped). Rebuild
-  the image (`kdev` rebuilds when the Dockerfile changes) to pick up a newer
-  upstream libxdk; the clone is depth-1 of the default branch, unpinned.
+  links with no `-I`/`-L` — no runtime clone or `./build.sh`. Only the
+  `kernelXDK` library target is built (test binary skipped). Rebuild the image
+  (`kdev` rebuilds when the Dockerfile changes) to pick up a newer upstream
+  libxdk; the clone is depth-1 of the default branch, unpinned.
+  `KU_XDK=/opt/kernelxdk`; `kxdb_tool` Python scripts live at
+  `$KU_XDK/kxdb_tool/` for use by `gen_kxdb`.
+- **`gen_kxdb`** — baked into the image at `/usr/local/bin/gen_kxdb`. Takes
+  an unstripped `vmlinux` and emits a `target_db.kxdb` (symbols only; no ROP
+  gadgets or struct layouts — add those in C via `AddSymbol`/`AddStruct` if
+  needed). Reads the Linux version string from the vmlinux binary so
+  `AutoDetectTarget()` works at runtime. Usage: `gen_kxdb vmlinux [out.kxdb]`.
 - **`fish_greeting.fish` / `help_msg.fish`** — colored cheat sheet on
   container entry; reprintable via `help_msg`.
 - **`disable_random_defconfig_stuff`** — shell script (sed+echo) that
